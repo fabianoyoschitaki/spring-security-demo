@@ -23,6 +23,7 @@ public class FakeApplicationUserDaoService implements ApplicationUserDao {
 
     @Override
     public Optional<ApplicationUser> selectApplicationUserByUsername(String username) {
+        System.out.println("selectApplicationUserByUsername " + username);
         return getApplicationUsers()
                 .stream()
                 .filter(user -> username.equals(user.getUsername()))

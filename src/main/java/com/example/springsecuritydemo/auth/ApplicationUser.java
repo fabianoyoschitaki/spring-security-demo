@@ -37,6 +37,7 @@ public class ApplicationUser implements UserDetails {
 
     @Override
     public String getPassword() {
+        System.out.println("getPassword: " + this.password);
         return password;
     }
 
