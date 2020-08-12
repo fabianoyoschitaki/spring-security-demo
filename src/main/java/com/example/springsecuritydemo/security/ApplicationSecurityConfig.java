@@ -1,5 +1,7 @@
 package com.example.springsecuritydemo.security;
 
+import javax.crypto.SecretKey;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.springsecuritydemo.auth.ApplicationUserService;
+import com.example.springsecuritydemo.jwt.JwtConfig;
+import com.example.springsecuritydemo.jwt.JwtTokenVerifier;
 import com.example.springsecuritydemo.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 
 @Configuration
@@ -25,10 +29,19 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
     private final PasswordEncoder passwordEncoder;
     private final ApplicationUserService applicationUserService;
     
+    private final SecretKey secretKey;
+    private final JwtConfig jwtConfig;
+    
     @Autowired
-    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, ApplicationUserService applicationUserService) {
+    public ApplicationSecurityConfig(
+            PasswordEncoder passwordEncoder, 
+            ApplicationUserService applicationUserService,
+            SecretKey secretKey,
+            JwtConfig jwtConfig) {
         this.passwordEncoder = passwordEncoder;
         this.applicationUserService = applicationUserService;
+        this.secretKey = secretKey;
+        this.jwtConfig = jwtConfig;
     }
     
     @Override
@@ -40,7 +53,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // session won't be stored in the database as it was previously
             .and()
-            .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager())) //authenticationManager() comes from WebSecurityConfigurerAdapter
+            .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey)) //authenticationManager() comes from WebSecurityConfigurerAdapter
+            .addFilterAfter(new JwtTokenVerifier(jwtConfig, secretKey), JwtUsernameAndPasswordAuthenticationFilter.class) // adding this filter after JwtUsernameAndPasswordAuthenticationFilter
             .authorizeRequests()
             .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
             .antMatchers("/api/**").hasRole(ApplicationUserRole.STUDENT.name())
