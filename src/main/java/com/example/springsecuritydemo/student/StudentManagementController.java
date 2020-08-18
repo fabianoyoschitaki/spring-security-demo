@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("management/api/v1/students")
+@Slf4j
 public class StudentManagementController {
     
     private static final List<Student> STUDENTS = Arrays.asList(
@@ -25,6 +28,7 @@ public class StudentManagementController {
     
     @GetMapping(path = "/{studentId}")
     public Student getStudent(@PathVariable("studentId") Integer studentId) {
+        log.info("getStudent: {}", studentId);
         return STUDENTS.stream()
                 .filter(student -> studentId.equals(student.getStudentId()))
                 .findFirst()
@@ -34,24 +38,25 @@ public class StudentManagementController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMINTRAINEE')")
     public List<Student> getAllStudents() {
+        log.info("getAllStudents");
         return STUDENTS;
     }
     
     @PostMapping
     @PreAuthorize("hasAuthority('student:write')")
     public void registerNewStudent(@RequestBody Student student) {
-        System.out.println(student + " created.");
+        log.info("registerNewStudent: {} created.", student);
     }
     
     @DeleteMapping(path = "{studentId}")
     @PreAuthorize("hasAuthority('student:write')")
     public void deleteStudent(@PathVariable("studentId") Integer studentId) {
-        System.out.println(studentId + " deleted.");
+        log.info("deleteStudent: {} deleted.", studentId);
     }
     
     @PutMapping(path = "{studentId}")
     @PreAuthorize("hasAuthority('student:write')")
     public void updateStudent(@PathVariable("studentId") Integer studentId, @RequestBody Student student) {
-        System.out.println(String.format("%s -> %s", studentId, student));
+        log.info("updateStudent: {} -> {}", studentId, student);
     }
 }

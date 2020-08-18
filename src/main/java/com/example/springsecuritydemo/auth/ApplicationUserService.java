@@ -7,8 +7,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 // need to comment this if want to use another UserDetailsService
 @Service
+@Slf4j
 public class ApplicationUserService implements UserDetailsService {
 
     private final ApplicationUserDao applicationUserDao;
@@ -20,7 +23,7 @@ public class ApplicationUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("loadUserByUsername " + username);
+        log.info("loadUserByUsername: {}", username);
         return applicationUserDao
                 .selectApplicationUserByUsername(username)
                 .orElseThrow(() -> 

@@ -1,12 +1,14 @@
 package com.example.springsecuritydemo.auth;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ApplicationUser implements UserDetails {
 
     private final Set<? extends GrantedAuthority> grantedAuthorities;
@@ -37,32 +39,37 @@ public class ApplicationUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        System.out.println("getPassword: " + this.password);
+        log.info("getPassword: {}", this.password);
         return password;
     }
 
     @Override
     public String getUsername() {
+        log.info("getUsername: {}", this.username);
         return username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
+        log.info("isAccountNonExpired: {}", this.isAccountNonExpired);
         return isAccountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
+        log.info("isAccountNonLocked: {}", this.isAccountNonLocked);
         return isAccountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
+        log.info("isCredentialsNonExpired: {}", this.isCredentialsNonExpired);
         return isCredentialsNonExpired;
     }
 
     @Override
     public boolean isEnabled() {
+        log.info("isEnabled: {}", this.isEnabled);
         return isEnabled;
     }
 

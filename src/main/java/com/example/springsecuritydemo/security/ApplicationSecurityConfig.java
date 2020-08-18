@@ -16,14 +16,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.springsecuritydemo.auth.ApplicationUserService;
 import com.example.springsecuritydemo.jwt.JwtConfig;
-import com.example.springsecuritydemo.jwt.JwtTokenVerifier;
+import com.example.springsecuritydemo.jwt.JwtTokenVerifierFilter;
 import com.example.springsecuritydemo.jwt.JwtUsernameAndPasswordAuthenticationFilter;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@Slf4j
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
-    
     
     // PasswordConfig will be injected here
     private final PasswordEncoder passwordEncoder;
@@ -46,6 +48,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        log.info("HttpSecurity configure start");
         http
 //            .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())  // will be unavailable for client side scripts
 //            .and()
@@ -54,7 +57,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // session won't be stored in the database as it was previously
             .and()
             .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey)) //authenticationManager() comes from WebSecurityConfigurerAdapter
-            .addFilterAfter(new JwtTokenVerifier(jwtConfig, secretKey), JwtUsernameAndPasswordAuthenticationFilter.class) // adding this filter after JwtUsernameAndPasswordAuthenticationFilter
+            .addFilterAfter(new JwtTokenVerifierFilter(jwtConfig, secretKey), JwtUsernameAndPasswordAuthenticationFilter.class) // adding this filter after JwtUsernameAndPasswordAuthenticationFilter
             .authorizeRequests()
             .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
             .antMatchers("/api/**").hasRole(ApplicationUserRole.STUDENT.name())
@@ -88,20 +91,24 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 //                .invalidateHttpSession(true)
 //                .deleteCookies("JSESSIONID", "remember-me")
 //                .logoutSuccessUrl("/login-page"); // page to which we'll be redirected after logout
+        log.info("HttpSecurity configure end (set JwtUsernameAndPasswordAuthenticationFilter");
     }
     
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        log.info("AuthenticationManagerBuilder configure start");
         // using the custom authentication provider ApplicationUserService
         auth.authenticationProvider(daoAuthenticationProvider());
+        log.info("AuthenticationManagerBuilder configure end (using custom authentication provider)");
     }
     
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
-        System.out.println("daoAuthenticationProvider");
+        log.info("daoAuthenticationProvider start");
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
         provider.setUserDetailsService(applicationUserService);
+        log.info("daoAuthenticationProvider end (using custom UserDetailsService: ApplicationUserService)");
         return provider;
     }
     

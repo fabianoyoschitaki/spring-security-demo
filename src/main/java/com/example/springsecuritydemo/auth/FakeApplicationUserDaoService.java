@@ -10,8 +10,11 @@ import org.springframework.stereotype.Repository;
 import com.example.springsecuritydemo.security.ApplicationUserRole;
 import com.google.common.collect.Lists;
 
-// tells spring it needs to be instantiated and "fake" is the bean to autowire in case there are multiple implementations
+import lombok.extern.slf4j.Slf4j;
+
+// tells Spring it needs to be instantiated and "fake" is the bean to autowire in case there are multiple implementations
 @Repository("fake")
+@Slf4j
 public class FakeApplicationUserDaoService implements ApplicationUserDao {
 
     private final PasswordEncoder passwordEncoder;
@@ -23,7 +26,7 @@ public class FakeApplicationUserDaoService implements ApplicationUserDao {
 
     @Override
     public Optional<ApplicationUser> selectApplicationUserByUsername(String username) {
-        System.out.println("selectApplicationUserByUsername " + username);
+        log.info("selectApplicationUserByUsername: {}", username);
         return getApplicationUsers()
                 .stream()
                 .filter(user -> username.equals(user.getUsername()))
@@ -60,7 +63,6 @@ public class FakeApplicationUserDaoService implements ApplicationUserDao {
                         true
                 )
         );
-        
         return applicationsUsers;
     }
 
