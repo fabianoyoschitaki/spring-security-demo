@@ -91,7 +91,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 //                .invalidateHttpSession(true)
 //                .deleteCookies("JSESSIONID", "remember-me")
 //                .logoutSuccessUrl("/login-page"); // page to which we'll be redirected after logout
-        log.info("HttpSecurity configure end (set JwtUsernameAndPasswordAuthenticationFilter");
+        log.info("HttpSecurity configure end (set JwtUsernameAndPasswordAuthenticationFilter and JwtTokenVerifierFilter)");
     }
     
     @Override
