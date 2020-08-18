@@ -14,7 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.example.springsecuritydemo.auth.ApplicationUserService;
+import com.example.springsecuritydemo.auth.ApplicationUserDetailsService;
 import com.example.springsecuritydemo.jwt.JwtConfig;
 import com.example.springsecuritydemo.jwt.JwtTokenVerifierFilter;
 import com.example.springsecuritydemo.jwt.JwtUsernameAndPasswordAuthenticationFilter;
@@ -29,7 +29,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
     
     // PasswordConfig will be injected here
     private final PasswordEncoder passwordEncoder;
-    private final ApplicationUserService applicationUserService;
+    private final ApplicationUserDetailsService applicationUserService;
     
     private final SecretKey secretKey;
     private final JwtConfig jwtConfig;
@@ -37,7 +37,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
     @Autowired
     public ApplicationSecurityConfig(
             PasswordEncoder passwordEncoder, 
-            ApplicationUserService applicationUserService,
+            ApplicationUserDetailsService applicationUserService,
             SecretKey secretKey,
             JwtConfig jwtConfig) {
         this.passwordEncoder = passwordEncoder;

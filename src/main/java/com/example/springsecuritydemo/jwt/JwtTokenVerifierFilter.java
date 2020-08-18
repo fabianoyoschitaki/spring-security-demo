@@ -75,6 +75,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
                     username, 
                     null,
                     simpleGrantedAuthorities);
+            //TODO SecurityContextHolder
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.info("setAuthentication UsernamePasswordAuthenticationToken SecurityContextHolder", username, authorities);
             

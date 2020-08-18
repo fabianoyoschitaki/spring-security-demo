@@ -12,12 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 // need to comment this if want to use another UserDetailsService
 @Service
 @Slf4j
-public class ApplicationUserService implements UserDetailsService {
+public class ApplicationUserDetailsService implements UserDetailsService {
 
     private final ApplicationUserDao applicationUserDao;
 
     @Autowired
-    public ApplicationUserService(@Qualifier("fake") ApplicationUserDao applicationUserDao) {
+    public ApplicationUserDetailsService(@Qualifier("fake") ApplicationUserDao applicationUserDao) {
         this.applicationUserDao = applicationUserDao;
     }
 

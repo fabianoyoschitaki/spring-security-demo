@@ -88,5 +88,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         log.info("successfulAuthentication token created. Adding token to response header: {} with value {}",
                 jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);
         response.addHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);
+        // if chain.doFilter was called then JwtTokenVerifierFilter would be triggered and a 403 would have been returned
+        // chain.doFilter(request, response);
     }
 }
